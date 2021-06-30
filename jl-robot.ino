@@ -29,11 +29,11 @@
 # define p_steps_per_mm -microstep*(steps_per_rev)/(pump_pitch_mm)
 
 // Set up pin definitions
-# define GO_BTN 12
+# define GO_BTN A2
 # define PARAM_SEL A0
 # define VALUE_UP 11
 # define VALUE_DOWN 10
-# define RESET_BTN A2
+# define RESET_BTN A1
 
 # define EN 8
 # define X_DIR 5
@@ -41,8 +41,8 @@
 # define X_STP 2
 # define P_STP 3
 
-# define DIN 7
-# define CS 4
+# define DIN 13
+# define CS 12
 # define CLK 9
 
 # define motorInterfaceType 2
