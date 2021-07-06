@@ -12,6 +12,8 @@
 // CHANGE THIS VALUE FOR DIFFERENT SYRINGE TYPES
 # define p_mm_per_ul 1.064
 
+# define p_invert 1
+
 # define xmin 0.0
 # define xmax 320.0
 # define xstep 10.0
@@ -26,7 +28,7 @@
 
 
 # define x_steps_per_mm -microstep*(steps_per_rev)/(pulley_teeth*belt_pitch_mm)
-# define p_steps_per_mm -microstep*(steps_per_rev)/(pump_pitch_mm)
+# define p_steps_per_mm p_invert*microstep*(steps_per_rev)/(pump_pitch_mm)
 
 // Set up pin definitions
 # define GO_BTN A2
@@ -217,8 +219,9 @@ void loop() {
     motors.runSpeedToPosition();
   } 
   if (reset_btn.fell()) {
+    if (p_invert == -1) { digitalWrite(P_DIR, HIGH); }
+    else if (p_invert == -1) { digitalWrite(P_DIR, LOW); }
     while (reset_btn.read() == LOW) {
-      digitalWrite(P_DIR, HIGH);
       digitalWrite(P_STP, LOW);
       delayMicroseconds(500);
       digitalWrite(P_STP, HIGH);
