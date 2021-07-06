@@ -1,7 +1,7 @@
-#include <AccelStepper.h>
-#include <MultiStepper.h>
-#include <DigitLedDisplay.h>
-#include <Bounce2.h>
+#include "src/AccelStepper/src/AccelStepper.h"
+#include "src/AccelStepper/src/MultiStepper.h"
+#include "src/DigitLedDisplay/src/DigitLedDisplay.h"
+#include "src/Bounce2/src/Bounce2.h"
 
 // Set up physical parameters
 # define pulley_teeth 20

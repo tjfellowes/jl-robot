@@ -1,0 +1,9 @@
+[submodule "AccelStepper"]
+	path = src/AccelStepper
+	url = https://github.com/waspinator/AccelStepper
+[submodule "DigitLedDisplay"]
+	path = src/DigitLedDisplay
+	url = https://github.com/ozhantr/DigitLedDisplay
+[submodule "Bounce2"]
+	path = src/Bounce2
+	url = https://github.com/thomasfredericks/Bounce2
