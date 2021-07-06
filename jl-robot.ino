@@ -12,7 +12,7 @@
 // CHANGE THIS VALUE FOR DIFFERENT SYRINGE TYPES
 # define p_mm_per_ul 1.064
 
-# define p_invert 1
+# define p_invert 1 // Change this to -1 if the pump motor moves in the wrong direction
 
 # define xmin 0.0
 # define xmax 320.0
@@ -22,9 +22,10 @@
 # define pmax 100.0
 # define pstep 1.0
 
-# define tmin 10
-# define tmax 1000
-# define tstep 1
+// Times are in seconds/10 (10 units = 1 s)
+# define tmin 10 // 1 s
+# define tmax 1000 // 100 s
+# define tstep 1 // 0.1 s
 
 
 # define x_steps_per_mm -microstep*(steps_per_rev)/(pulley_teeth*belt_pitch_mm)
@@ -62,9 +63,9 @@ Bounce value_up = Bounce();
 Bounce value_down = Bounce();
 Bounce reset_btn = Bounce();
 
-long p = 10;
+long p = 20;
 long x = 300;
-float t = 20;// time in seconds x 10
+float t = 150;// time in seconds x 10
 long x_speed = 2000;
 long p_speed = 2000;
 
@@ -217,17 +218,24 @@ void loop() {
       reset = true;
     }
     motors.runSpeedToPosition();
-  } 
-  if (reset_btn.fell()) {
-    if (p_invert == -1) { digitalWrite(P_DIR, HIGH); }
-    else if (p_invert == -1) { digitalWrite(P_DIR, LOW); }
-    while (reset_btn.read() == LOW) {
-      digitalWrite(P_STP, LOW);
-      delayMicroseconds(500);
-      digitalWrite(P_STP, HIGH);
-      delayMicroseconds(500);
-      reset_btn.update();
-    }
   }
 
+  if (reset_btn.fell()) {
+    if (reset == true) {
+    }
+    else {
+      pcurr = pcurr-p;
+      positions[1] = (p_steps_per_mm*p_mm_per_ul*(pcurr));
+      p_speed = p_steps_per_mm*p_mm_per_ul*(p)/(t/10);
+      p_motor.setMaxSpeed(abs(p_speed));
+      
+      MultiStepper motors;
+      motors.addStepper(p_motor);
+
+      motors.moveTo(positions);
+
+      reset = true;
+    }
+    motors.runSpeedToPosition();
+  }
 }
