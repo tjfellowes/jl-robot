@@ -32,11 +32,11 @@
 # define p_steps_per_mm p_invert*microstep*(steps_per_rev)/(pump_pitch_mm)
 
 // Set up pin definitions
-# define GO_BTN A2
-# define PARAM_SEL A0
-# define VALUE_UP 11
-# define VALUE_DOWN 10
-# define RESET_BTN A1
+# define GO_BTN A1
+# define PARAM_SEL A2
+# define VALUE_UP 12
+# define VALUE_DOWN A3
+# define RESET_BTN A0
 
 # define EN 8
 # define X_DIR 5
@@ -44,8 +44,8 @@
 # define X_STP 2
 # define P_STP 3
 
-# define DIN 13
-# define CS 12
+# define DIN 11
+# define CS 10
 # define CLK 9
 
 # define motorInterfaceType 2
@@ -63,7 +63,7 @@ Bounce value_up = Bounce();
 Bounce value_down = Bounce();
 Bounce reset_btn = Bounce();
 
-long p = 20;
+long p = 10;
 long x = 300;
 float t = 150;// time in seconds x 10
 long x_speed = 2000;
@@ -194,6 +194,7 @@ void loop() {
   }
   
   if (go_btn.fell()) {
+    digitalWrite(EN, LOW);
     if (reset == true) {
       positions[0] = 0;
       motors.moveTo(positions);
@@ -218,24 +219,26 @@ void loop() {
       reset = true;
     }
     motors.runSpeedToPosition();
+    digitalWrite(EN, HIGH);
   }
 
   if (reset_btn.fell()) {
-    if (reset == true) {
-    }
-    else {
+    digitalWrite(EN, LOW);
+    if (reset == false) {
+      positions[0] = 0;
       pcurr = pcurr-p;
       positions[1] = (p_steps_per_mm*p_mm_per_ul*(pcurr));
       p_speed = p_steps_per_mm*p_mm_per_ul*(p)/(t/10);
       p_motor.setMaxSpeed(abs(p_speed));
       
       MultiStepper motors;
+      motors.addStepper(x_motor);
       motors.addStepper(p_motor);
 
       motors.moveTo(positions);
-
-      reset = true;
     }
+
     motors.runSpeedToPosition();
+    digitalWrite(EN, HIGH);
   }
 }
